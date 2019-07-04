@@ -1,0 +1,130 @@
+@font-face {
+  font-family: "pixelart";
+  src: url("./fonts/PressStart2P.ttf");
+}
+
+body {
+  background: black;
+}
+body #center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+body #logo {
+  position: absolute;
+  margin-top: 9vh;
+  margin-left: 62vw;
+}
+
+body #container {
+  align-items: center;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+}
+
+body #shipp {
+  margin-left: 8vw;
+}
+
+body #main-btns {
+  margin-left: -5vw;
+  margin-top: 10vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 30vh;
+  align-items: center;
+}
+
+body #secnd-btns {
+  width: 25vw;
+  position: absolute;
+  margin-top: 10vh;
+}
+
+body #instructions {
+  font-size: 25px;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+body #startButton,
+body #start2Button {
+  font-size: 25px;
+  background-color: lightgoldenrodyellow;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+body #startButton:hover,
+body #start2Button:hover {
+  background-color: palegoldenrod;
+  transition: all 0.3s;
+}
+
+body #restartButton,
+body #restart2Button {
+  font-size: 25px;
+  background-color: rgba(144, 238, 144, 0.95);
+  color: black;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+body #restartButton:hover,
+body #restart2Button:hover {
+  cursor: pointer;
+  background-color: palegreen;
+  transition: all 0.3s;
+}
+
+body #main {
+  cursor: pointer;
+  font-size: 25px;
+  background-color: rgba(255, 192, 203, 0.9);
+  color: black;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+body #main:hover {
+  background-color: pink;
+  transition: all 0.3s;
+}
+
+body #soundOn,
+body #soundOff {
+  cursor: pointer;
+  margin-left: 7vw;
+  margin-top: -32vh;
+  position: absolute;
+}
+
+.disp {
+  display: none;
+}
+
+body .uk-modal-dialog {
+  background: lightgrey;
+  color: black;
+  border-radius: 20px;
+  text-align: center;
+}
+
+canvas {
+  border-radius: 75px;
+  border: 3px solid mediumorchid;
+}
