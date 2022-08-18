@@ -1,29 +1,27 @@
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-var startedGame = false;
-var interval;
-var frames = 0;
-var score = 0;
-var impacts = 0;
-var shots = 0;
-var audio = new Audio();
-audio.src = "./sounds/Moon Patrol - Atari 2600.mp3";
-audio.loop = true;
-var jump = new Audio();
-jump.src = "./sounds/jump.mp3";
-var impact = new Audio();
-impact.src = "./sounds/impact.mp3";
-var shooting = new Audio();
-shooting.src = "./sounds/shot.mp3";
-var dead = new Audio();
-dead.src = "./sounds/dead-enemy.mp3";
-var gOver = new Audio();
-gOver.src = "./sounds/game-over.mp3";
-var gComplete = new Audio();
-gComplete.src = "./sounds/winner.mp3";
-var player1 = localStorage.getItem("player1") || 0;
-var player2 = localStorage.getItem("player2") || 0;
+// Context
+const context = canvas.getContext("2d");
 
+// Sounds
+const backgroundSound = new Audio("./sounds/background.mp3");
+backgroundSound.loop = true;
+
+const sounds = {
+  jump: new Audio("./sounds/jump.mp3"),
+  impact: new Audio("./sounds/impact.mp3"),
+  shot: new Audio("./sounds/shot.mp3"),
+  dead: new Audio("./sounds/dead.mp3"),
+  lost: new Audio("./sounds/game-over.mp3"),
+  won: new Audio("./sounds/game-complete.mp3"),
+};
+
+// Initial values
+let interval;
+let frames = 0;
+let score = 0;
+let impacts = 0;
+let shots = 0;
+
+// Classes
 class Background {
   constructor() {
     this.x = 0;
@@ -33,137 +31,21 @@ class Background {
     this.image = new Image();
     this.image.src = "./images/background.png";
   }
-  gameOver() {
+  gameOver(variant) {
     clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 147, 406, 206);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 150, 400, 200);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME OVER", 390, 210);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 250);
-    audio.pause();
-    gOver.play();
-    interval = null;
-    restartButton.removeAttribute("class", "disp");
-    main.removeAttribute("class", "disp");
-  }
-  gameComplete() {
-    clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 147, 406, 206);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 150, 400, 200);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME COMPLETE", 335, 210);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 250);
-    audio.pause();
-    gComplete.play();
-    interval = null;
-    restartButton.removeAttribute("class", "disp");
-    main.removeAttribute("class", "disp");
-  }
-  gameOver2() {
-    clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 147, 406, 206);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 150, 400, 200);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME OVER", 390, 210);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 250);
-    localStorage.setItem("player1", score);
-    audio.pause();
-    gOver.play();
-    interval = null;
-    restart2Button.removeAttribute("class", "disp");
-    main.removeAttribute("class", "disp");
-  }
-  gameComplete2() {
-    clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 147, 406, 206);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 150, 400, 200);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME COMPLETE", 335, 210);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 250);
-    localStorage.setItem("player1", score);
-    audio.pause();
-    gComplete.play();
-    interval = null;
-    restart2Button.removeAttribute("class", "disp");
-    main.removeAttribute("class", "disp");
-  }
-  gameOver3() {
-    clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 47, 406, 306);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 50, 400, 300);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME OVER", 390, 105);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 145);
-    localStorage.setItem("player2", score);
-    player1 = localStorage.getItem("player1");
-    player2 = localStorage.getItem("player2");
-    ctx.font = "15px pixelart";
-    ctx.fillText("PLAYER 1: " + player1, 390, 185);
-    ctx.fillText("PLAYER 2: " + player2, 390, 215);
-    ctx.font = "25px pixelart";
-    ctx.fillText(
-      player1 > player2 ? "PLAYER 1 WINS!" : "PLAYER 2 WINS!",
-      340,
-      260
-    );
-    audio.pause();
-    gOver.play();
-    interval = null;
-    main.removeAttribute("class", "disp");
-  }
-  gameComplete3() {
-    clearInterval(interval);
-    ctx.fillStyle = "mediumorchid";
-    ctx.fillRect(297, 47, 406, 306);
-    ctx.fillStyle = "black";
-    ctx.fillRect(300, 50, 400, 300);
-    ctx.fillStyle = "white";
-    ctx.font = "25px pixelart";
-    ctx.fillText("GAME COMPLETE", 335, 105);
-    ctx.font = "20px pixelart";
-    ctx.fillText("YOUR SCORE " + score, 350, 145);
-    localStorage.setItem("player2", score);
-    player1 = localStorage.getItem("player1");
-    player2 = localStorage.getItem("player2");
-    ctx.font = "15px pixelart";
-    ctx.fillText("PLAYER 1: " + player1, 390, 185);
-    ctx.fillText("PLAYER 2: " + player2, 390, 215);
-    ctx.font = "25px pixelart";
-    ctx.fillText(
-      player1 > player2 ? "PLAYER 1 WINS!" : "PLAYER 2 WINS!",
-      340,
-      260
-    );
-    audio.pause();
-    gComplete.play();
-    interval = null;
-    main.removeAttribute("class", "disp");
+    backgroundSound.pause();
+    variant === "WON" ? sounds.won.play() : sounds.lost.play();
+    variant === "WON"
+      ? (endModalTitle.innerText = "¡VICTORY!")
+      : (endModalTitle.innerText = "GAME OVER");
+    endModalSubtitle.innerText = `YOUR SCORE ${score}`;
+    UIkit.modal("#end-modal").show();
   }
   draw() {
     this.x--;
     if (this.x < -canvas.width) this.x = 0;
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    ctx.drawImage(
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(
       this.image,
       this.x + this.width,
       this.y,
@@ -180,37 +62,47 @@ class HealthBar {
     this.width = 110;
     this.height = 75;
     this.image = new Image();
-    this.image.src = "./images/h1.png";
   }
   draw() {
-    if (impacts < 2) this.image.src = "./images/h1.png";
-    if (impacts > 1) this.image.src = "./images/h2.png";
-    if (impacts > 3) this.image.src = "./images/h3.png";
-    if (impacts > 5) this.image.src = "./images/h4.png";
-    if (impacts > 7) this.image.src = "./images/h5.png";
-    if (impacts > 9) this.image.src = "./images/h6.png";
-    if (impacts > 11) this.image.src = "./images/h7.png";
-    if (impacts > 13) this.image.src = "./images/h8.png";
-    if (impacts > 15) this.image.src = "./images/h9.png";
-    if (impacts > 17) this.image.src = "./images/h10.png";
-    if (impacts > 19) this.image.src = "./images/h11.png";
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    this.image.src =
+      impacts > 19
+        ? "./images/health11.png"
+        : impacts > 17
+        ? "./images/health10.png"
+        : impacts > 15
+        ? "./images/health9.png"
+        : impacts > 13
+        ? "./images/health8.png"
+        : impacts > 11
+        ? "./images/health7.png"
+        : impacts > 9
+        ? "./images/health6.png"
+        : impacts > 7
+        ? "./images/health5.png"
+        : impacts > 5
+        ? "./images/health4.png"
+        : impacts > 3
+        ? "./images/health3.png"
+        : impacts > 1
+        ? "./images/health2.png"
+        : "./images/health1.png";
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
 class Ship {
   constructor() {
     this.image1 = new Image();
-    this.image1.src = "./images/nave1.png";
+    this.image1.src = "./images/ship1.png";
     this.image2 = new Image();
-    this.image2.src = "./images/nave2.png";
+    this.image2.src = "./images/ship2.png";
     this.image = this.image1;
     this.speed = 2;
     this.friction = 0.99;
     this.velxl = 0;
     this.velxr = 0;
     this.x = 440;
-    this.y = 70;
+    this.y = 80;
     this.width = 120;
     this.height = 70;
   }
@@ -223,18 +115,18 @@ class Ship {
     );
   }
   draw() {
-    if (this.y < 350) this.y += 2;
+    if (this.y < 434) this.y += 2;
     if (frames % 15 === 0) {
-      this.image = this.image == this.image1 ? this.image2 : this.image1;
+      this.image = this.image === this.image1 ? this.image2 : this.image1;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
 class Crater {
   constructor() {
     this.x = canvas.width;
-    this.y = 417;
+    this.y = 500;
     this.width = 70;
     this.height = 20;
     this.image = new Image();
@@ -242,14 +134,14 @@ class Crater {
   }
   draw() {
     if (frames % 10) this.x -= 5;
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
 class Enemy {
   constructor(x = canvas.width) {
     this.x = x;
-    this.y = 375;
+    this.y = 460;
     this.width = 50;
     this.height = 30;
     this.image1 = new Image();
@@ -263,7 +155,7 @@ class Enemy {
     if (frames % 10 === 0) {
       this.image = this.image == this.image1 ? this.image2 : this.image1;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -283,7 +175,7 @@ class SkyEnemy1 {
     if (frames % 10 === 0) {
       this.image = this.image == this.image1 ? this.image2 : this.image1;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -303,7 +195,7 @@ class SkyEnemy2 {
     if (frames % 10 === 0) {
       this.image = this.image == this.image1 ? this.image2 : this.image1;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -317,7 +209,7 @@ class FinalEnemy {
     this.image1 = new Image();
     this.image1.src = "./images/finalEnemy.png";
     this.image2 = new Image();
-    this.image2.src = "./images/finalEnemyy.png";
+    this.image2.src = "./images/finalEnemy2.png";
     this.image = this.image1;
     this.visible = false;
   }
@@ -325,7 +217,7 @@ class FinalEnemy {
     if (frames % 20 === 0) {
       this.image = this.image == this.image1 ? this.image2 : this.image1;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -339,7 +231,7 @@ class Explosion {
     this.image.src = "./images/explosion.png";
   }
   draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -353,7 +245,7 @@ class Shock {
     this.image.src = "./images/impact.png";
   }
   draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -375,7 +267,7 @@ class RightBullet {
     );
   }
   draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -397,7 +289,7 @@ class UpBullet {
     );
   }
   draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
@@ -426,92 +318,88 @@ class EnemyBullet {
       this.height = 3;
     }
     if (this.direction === "sky1") {
-      this.image.src = "./images/sky1Bullet.png";
+      this.image.src = "./images/skyEnemy1Bullet.png";
       this.width = 20;
       this.height = 8;
     }
     if (this.direction === "sky2") {
-      this.image.src = "./images/sky2Bullet.png";
+      this.image.src = "./images/skyEnemy2Bullet.png";
       this.width = 20;
       this.height = 8;
     }
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
-var background = new Background();
-var healthBar = new HealthBar();
-var ship = new Ship();
-var finalEnemy = new FinalEnemy();
-var rightBullet = new RightBullet();
-var upBullet = new UpBullet();
-var enemybullet = new EnemyBullet();
-var craters = [];
-var enemies = [];
-var skyEnemies1 = [];
-var skyEnemies2 = [];
-var shipRightBullets = [];
-var shipUpBullets = [];
-var skyEnemy1Bullets = [];
-var skyEnemy2Bullets = [];
-var finalEnemyBullets = [];
+const background = new Background();
+const healthBar = new HealthBar();
+const ship = new Ship();
+const finalEnemy = new FinalEnemy();
+const rightBullet = new RightBullet();
+const upBullet = new UpBullet();
+const enemybullet = new EnemyBullet();
 
-function generateCraters() {
-  if (frames <= 4000 && (frames % 220 == 0 || frames % 550 == 0)) {
-    let crater = new Crater();
-    craters.push(crater);
+let craters = [];
+let enemies = [];
+let skyEnemies1 = [];
+let skyEnemies2 = [];
+let shipRightBullets = [];
+let shipUpBullets = [];
+let skyEnemy1Bullets = [];
+let skyEnemy2Bullets = [];
+let finalEnemyBullets = [];
+
+// Generate random number between min and max
+const randomNum = (max, min) => Math.round(Math.random() * (max - min) + min);
+
+// Generate and draw craters
+const generateCraters = () => {
+  if (frames <= 6000 && (frames % 80 === 0 || frames % 200 === 0)) {
+    if (randomNum(0, 1) === 1) craters.push(new Crater());
   }
-}
-
-function drawCraters() {
+};
+const drawCraters = () => {
   craters.forEach((crater, index) => {
-    if (crater.x < -canvas.width) {
+    crater.draw();
+    if (crater.x < -crater.width) {
       score += 20;
       return craters.splice(index, 1);
     }
-    crater.draw();
     if (ship.collision(crater)) {
-      let shock = new Shock(ship.x, ship.y);
-      shock.draw();
-      impact.play();
-      craters.splice(index, 1);
+      sounds.impact.play();
       impacts++;
+      return craters.splice(index, 1);
     }
   });
-}
+};
 
-function generateEnemies() {
+// Generate and draw enemies
+const generateEnemies = () => {
   if (
     frames >= 800 &&
     frames <= 4000 &&
     (frames % 280 == 0 || frames % 1000 == 0)
-  ) {
-    let enemy = new Enemy();
-    enemies.push(enemy);
-  }
-}
-
-function drawEnemies() {
+  )
+    enemies.push(new Enemy());
+};
+const drawEnemies = () => {
   enemies.forEach((enemy, index) => {
     if (enemy.x < -canvas.width) {
       return enemies.splice(index, 1);
     }
     enemy.draw();
     if (ship.collision(enemy)) {
-      let shock = new Shock(ship.x, ship.y);
-      shock.draw();
-      impact.play();
+      // const shock = new Shock(ship.x, ship.y);
+      // shock.draw();
+      sounds.impact.play();
       enemies.splice(index, 1);
       impacts++;
     }
   });
-}
+};
 
-function randomNum(max, min) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
-function generateSkyEnemies() {
+// Generate and draw sky enemies
+const generateSkyEnemies = () => {
   if (
     frames >= 2000 &&
     frames <= 4000 &&
@@ -528,9 +416,8 @@ function generateSkyEnemies() {
     skyEnemy1Bullets.push(skyEnemy1Bullet);
     skyEnemy2Bullets.push(skyEnemy2Bullet);
   }
-}
-
-function drawSkyEnemies() {
+};
+const drawSkyEnemies = () => {
   skyEnemies1.forEach((skyEnemy1, index) => {
     skyEnemy1.x += 1;
     if (skyEnemy1.x > canvas.width) {
@@ -540,7 +427,7 @@ function drawSkyEnemies() {
     if (ship.collision(skyEnemy1)) {
       let shock = new Shock(ship.x, ship.y);
       shock.draw();
-      impact.play();
+      sounds.impact.play();
       skyEnemies1.splice(index, 1);
       impacts++;
     }
@@ -557,7 +444,7 @@ function drawSkyEnemies() {
       if (skyEnemy1Bullet.collision(ship)) {
         let shock = new Shock(ship.x, ship.y);
         shock.draw();
-        impact.play();
+        sounds.impact.play();
         skyEnemy1Bullets.splice(i, 1);
         impacts++;
       }
@@ -572,7 +459,7 @@ function drawSkyEnemies() {
     if (ship.collision(skyEnemy2)) {
       let shock = new Shock(ship.x, ship.y);
       shock.draw();
-      impact.play();
+      sounds.impact.play();
       skyEnemies2.splice(index, 1);
       impacts++;
     }
@@ -589,21 +476,22 @@ function drawSkyEnemies() {
       if (skyEnemy2Bullet.collision(ship)) {
         let shock = new Shock(ship.x, ship.y);
         shock.draw();
-        impact.play();
+        sounds.impact.play();
         skyEnemy2Bullets.splice(i, 1);
         impacts++;
       }
     });
   });
-}
+};
 
-function generateFinalEnemy() {
+// Generate and draw final enemy
+const generateFinalEnemy = () => {
   if (frames >= 4000) {
     ship.x = 200;
     finalEnemy.draw();
     finalEnemy.visible = true;
   }
-}
+};
 
 function drawRightBullets() {
   shipRightBullets.forEach((rightBullet, i) => {
@@ -623,7 +511,7 @@ function drawRightBullets() {
         explosion.draw();
         shipRightBullets.splice(i, 1);
         enemies.splice(index, 1);
-        dead.play();
+        sounds.dead.play();
         score += 50;
       }
     });
@@ -638,7 +526,7 @@ function drawRightBullets() {
         explosion.draw();
         shipRightBullets.splice(i, 1);
         skyEnemies1.splice(index, 1);
-        dead.play();
+        sounds.dead.play();
         score += 50;
       }
     });
@@ -653,13 +541,13 @@ function drawRightBullets() {
         explosion.draw();
         shipRightBullets.splice(i, 1);
         skyEnemies2.splice(index, 1);
-        dead.play();
+        sounds.dead.play();
         score += 50;
       }
     });
     if (finalEnemy.visible == true && rightBullet.collision(finalEnemy)) {
       shipRightBullets.splice(i, 1);
-      dead.play();
+      sounds.dead.play();
       score += 100;
       shots++;
     }
@@ -684,7 +572,7 @@ function drawUpBullets() {
         explosion.draw();
         shipUpBullets.splice(i, 1);
         skyEnemies1.splice(index, 1);
-        dead.play();
+        sounds.dead.play();
         score += 50;
       }
     });
@@ -699,7 +587,7 @@ function drawUpBullets() {
         explosion.draw();
         shipUpBullets.splice(i, 1);
         skyEnemies2.splice(index, 1);
-        dead.play();
+        sounds.dead.play();
         score += 50;
       }
     });
@@ -724,295 +612,117 @@ function drawFinalEnemyBullet() {
     if (finalEnemyBullet.collision(ship)) {
       let shock = new Shock(ship.x, ship.y);
       shock.draw();
-      impact.play();
+      sounds.impact.play();
       finalEnemyBullets.splice(i, 1);
       impacts++;
     }
   });
 }
 
-function game_Over(num) {
-  if (impacts > 1) {
-    if (num === 1) background.gameOver();
-    if (num === 2) background.gameOver2();
-    if (num === 3) background.gameOver3();
-  } else if (shots > 30) {
-    let explosion = new Explosion(
+const gameOver = () => {
+  if (impacts > 20) background.gameOver("LOST");
+  else if (shots > 30) {
+    new Explosion(
       finalEnemy.x - 10,
       finalEnemy.y - 10,
       finalEnemy.width + 20,
       finalEnemy.height + 20
-    );
-    explosion.draw();
-    if (num === 1) background.gameComplete();
-    if (num === 2) background.gameComplete2();
-    if (num === 3) background.gameComplete3();
+    ).draw();
+    background.gameOver("WON");
   }
-}
-
-window.onload = function() {
-  function update() {
-    frames++;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    background.draw();
-    ship.draw();
-    healthBar.draw();
-    ctx.fillStyle = "white";
-    ctx.font = "13px pixelart";
-    ctx.fillText("SCORE " + score, 40, 45);
-    ctx.fillText("IMPACTS " + impacts, 270, 45);
-    generateCraters();
-    drawCraters();
-    generateEnemies();
-    drawEnemies();
-    generateSkyEnemies();
-    drawSkyEnemies();
-    generateFinalEnemy();
-    drawRightBullets();
-    drawUpBullets();
-    generateFinalEnemyBullet();
-    drawFinalEnemyBullet();
-    ship.velxl *= ship.friction;
-    ship.velxr *= ship.friction;
-    if (ship.x + ship.velxl < 880) ship.x += ship.velxl;
-    if (ship.x - ship.velxr > 15) ship.x += ship.velxr;
-    game_Over(1);
-  }
-
-  function startGame() {
-    startedGame = true;
-    interval = setInterval(update, 1000 / 100);
-    audio.play();
-  }
-
-  function restart() {
-    frames = 0;
-    score = 0;
-    impacts = 0;
-    shots = 0;
-    craters = [];
-    enemies = [];
-    skyEnemies1 = [];
-    skyEnemies2 = [];
-    shipRightBullets = [];
-    shipUpBullets = [];
-    skyEnemy1Bullets = [];
-    skyEnemy2Bullets = [];
-    finalEnemyBullets = [];
-    ship.x = 440;
-    ship.y = 300;
-    audio.currentTime = 0;
-    jump.src = "./sounds/jump.mp3";
-    impact.src = "./sounds/impact.mp3";
-    shooting.src = "./sounds/shot.mp3";
-    dead.src = "./sounds/dead enemy.mp3";
-    gOver.src = "./sounds/game over.mp3";
-    gComplete.src = "./sounds/winner.mp3";
-    startGame();
-  }
-
-  function update2() {
-    frames++;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    background.draw();
-    ship.draw();
-    healthBar.draw();
-    ctx.fillStyle = "white";
-    ctx.font = "13px pixelart";
-    ctx.fillText("SCORE " + score, 40, 45);
-    ctx.fillText("IMPACTS " + impacts, 270, 45);
-    generateCraters();
-    drawCraters();
-    generateEnemies();
-    drawEnemies();
-    generateSkyEnemies();
-    drawSkyEnemies();
-    generateFinalEnemy();
-    drawRightBullets();
-    drawUpBullets();
-    generateFinalEnemyBullet();
-    drawFinalEnemyBullet();
-    ship.velxl *= ship.friction;
-    ship.velxr *= ship.friction;
-    if (ship.x + ship.velxl < 880) ship.x += ship.velxl;
-    if (ship.x - ship.velxr > 15) ship.x += ship.velxr;
-    game_Over(2);
-  }
-
-  function startGame2() {
-    startedGame = true;
-    interval = setInterval(update2, 1000 / 100);
-    audio.play();
-  }
-
-  function restart2() {
-    frames = 0;
-    score = 0;
-    impacts = 0;
-    shots = 0;
-    craters = [];
-    enemies = [];
-    skyEnemies1 = [];
-    skyEnemies2 = [];
-    shipRightBullets = [];
-    shipUpBullets = [];
-    skyEnemy1Bullets = [];
-    skyEnemy2Bullets = [];
-    finalEnemyBullets = [];
-    ship.x = 440;
-    ship.y = 300;
-    audio.currentTime = 0;
-    jump.src = "./sounds/jump.mp3";
-    impact.src = "./sounds/impact.mp3";
-    shooting.src = "./sounds/shot.mp3";
-    dead.src = "./sounds/dead enemy.mp3";
-    gOver.src = "./sounds/game over.mp3";
-    gComplete.src = "./sounds/winner.mp3";
-    startGame3();
-  }
-
-  function update3() {
-    frames++;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    background.draw();
-    ship.draw();
-    healthBar.draw();
-    ctx.fillStyle = "white";
-    ctx.font = "13px pixelart";
-    ctx.fillText("SCORE " + score, 40, 45);
-    ctx.fillText("IMPACTS " + impacts, 270, 45);
-    generateCraters();
-    drawCraters();
-    generateEnemies();
-    drawEnemies();
-    generateSkyEnemies();
-    drawSkyEnemies();
-    generateFinalEnemy();
-    drawRightBullets();
-    drawUpBullets();
-    generateFinalEnemyBullet();
-    drawFinalEnemyBullet();
-    ship.velxl *= ship.friction;
-    ship.velxr *= ship.friction;
-    if (ship.x + ship.velxl < 880) ship.x += ship.velxl;
-    if (ship.x - ship.velxr > 15) ship.x += ship.velxr;
-    game_Over(3);
-  }
-
-  function startGame3() {
-    startedGame = true;
-    interval = setInterval(update3, 1000 / 100);
-    audio.play();
-    console.log(score);
-  }
-
-  document.getElementById("startButton").onclick = function() {
-    startButton.setAttribute("class", "disp");
-    start2Button.setAttribute("class", "disp");
-    shipp.setAttribute("class", "disp");
-    soundOn.removeAttribute("class", "disp");
-    soundOn.setAttribute("class", "uk-icon-button");
-    soundOff.removeAttribute("class", "disp");
-    soundOff.setAttribute("class", "uk-icon-button");
-    instructions.setAttribute("class", "disp");
-    if (!interval) {
-      startGame();
-    }
-  };
-
-  document.getElementById("start2Button").onclick = function() {
-    startButton.setAttribute("class", "disp");
-    start2Button.setAttribute("class", "disp");
-    shipp.setAttribute("class", "disp");
-    soundOn.removeAttribute("class", "disp");
-    soundOn.setAttribute("class", "uk-icon-button");
-    soundOff.removeAttribute("class", "disp");
-    soundOff.setAttribute("class", "uk-icon-button");
-    instructions.setAttribute("class", "disp");
-    if (!interval) {
-      startGame2();
-    }
-  };
-
-  document.getElementById("restartButton").onclick = function() {
-    finalEnemy.visible = false;
-    restartButton.setAttribute("class", "disp");
-    main.setAttribute("class", "disp");
-    soundOn.removeAttribute("class", "disp");
-    soundOn.setAttribute("class", "uk-icon-button");
-    soundOff.removeAttribute("class", "disp");
-    soundOff.setAttribute("class", "uk-icon-button");
-    if (!interval) {
-      restart();
-    }
-  };
-
-  document.getElementById("restart2Button").onclick = function() {
-    finalEnemy.visible = false;
-    restart2Button.setAttribute("class", "disp");
-    main.setAttribute("class", "disp");
-    soundOn.removeAttribute("class", "disp");
-    soundOn.setAttribute("class", "uk-icon-button");
-    soundOff.removeAttribute("class", "disp");
-    soundOff.setAttribute("class", "uk-icon-button");
-    if (!interval) {
-      restart2();
-    }
-  };
-
-  document.getElementById("main").onclick = function() {
-    location.reload(true);
-    localStorage.clear();
-  };
-
-  document.getElementById("soundOn").onclick = function() {
-    soundOn.setAttribute("class", "disp");
-    soundOff.removeAttribute("class", "disp");
-    soundOff.setAttribute("class", "uk-icon-button");
-    audio.pause();
-    jump.src = undefined;
-    impact.src = undefined;
-    shooting.src = undefined;
-    dead.src = undefined;
-    gOver.src = undefined;
-    gComplete.src = undefined;
-  };
-
-  document.getElementById("soundOff").onclick = function() {
-    soundOff.setAttribute("class", "disp");
-    soundOn.removeAttribute("class", "disp");
-    soundOn.setAttribute("class", "uk-icon-button");
-    audio.play();
-    jump.src = "./sounds/jump.mp3";
-    impact.src = "./sounds/impact.mp3";
-    shooting.src = "./sounds/shot.mp3";
-    dead.src = "./sounds/dead-enemy.mp3";
-    gOver.src = "./sounds/game-over.mp3";
-    gComplete.src = "./sounds/winner.mp3";
-  };
 };
 
-addEventListener("keydown", function(event) {
-  if (event.keyCode === 37) {
-    if (ship.velxr < ship.speed) {
-      ship.velxr--;
-    }
-  }
-  if (event.keyCode === 39) {
-    if (ship.velxl < ship.speed) {
-      ship.velxl++;
-    }
-  }
-  if (event.keyCode === 32 && ship.y >= 120) {
-    ship.y -= 120;
-    jump.play();
-  }
-  if (event.keyCode === 40) {
-    shooting.play();
-    shipRightBullets.push(new RightBullet(ship.x, ship.y));
-  }
-  if (event.keyCode === 38) {
-    shooting.play();
+const update = () => {
+  frames++;
+  background.draw();
+  ship.draw();
+  healthBar.draw();
+  context.fillStyle = "white";
+  context.font = "13px pixelart";
+  context.fillText("SCORE " + score, 40, 45);
+  context.fillText("IMPACTS " + impacts, 270, 45);
+  generateCraters();
+  drawCraters();
+  generateEnemies();
+  drawEnemies();
+  generateSkyEnemies();
+  drawSkyEnemies();
+  generateFinalEnemy();
+  drawRightBullets();
+  drawUpBullets();
+  generateFinalEnemyBullet();
+  drawFinalEnemyBullet();
+  ship.velxl *= ship.friction;
+  ship.velxr *= ship.friction;
+  if (ship.x + ship.velxl < 880) ship.x += ship.velxl;
+  if (ship.x - ship.velxr > 15) ship.x += ship.velxr;
+  gameOver();
+};
+
+const startGame = () => {
+  interval = setInterval(update, 1000 / 100);
+  backgroundSound.play();
+  mainScreen.setAttribute("class", "hidden");
+  soundOn.setAttribute("class", "uk-icon-button");
+};
+
+const restartGame = () => {
+  UIkit.modal("#end-modal").hide();
+  soundOn.setAttribute("class", "uk-icon-button");
+  frames = 0;
+  score = 0;
+  impacts = 0;
+  shots = 0;
+  craters = [];
+  enemies = [];
+  skyEnemies1 = [];
+  skyEnemies2 = [];
+  shipRightBullets = [];
+  shipUpBullets = [];
+  skyEnemy1Bullets = [];
+  skyEnemy2Bullets = [];
+  finalEnemyBullets = [];
+  ship.x = 440;
+  ship.y = 300;
+  backgroundSound.load();
+  startGame();
+};
+
+// Event listeners
+
+buttonStart.onclick = () => startGame();
+buttonRestart.onclick = () => restartGame();
+buttonMainMenu.onclick = () => location.reload(true);
+
+soundOn.onclick = () => {
+  soundOn.setAttribute("class", "hidden");
+  soundOff.setAttribute("class", "uk-icon-button");
+  backgroundSound.pause();
+  Object.values(sounds).map((sound) => (sound.muted = true));
+};
+
+soundOff.onclick = () => {
+  soundOff.setAttribute("class", "hidden");
+  soundOn.setAttribute("class", "uk-icon-button");
+  backgroundSound.play();
+  Object.values(sounds).map((sound) => (sound.muted = false));
+};
+
+addEventListener("keydown", ({key}) => {
+  if (key === "ArrowUp") {
     shipUpBullets.push(new UpBullet(ship.x, ship.y));
+    sounds.shot.play();
+  }
+  if (key === "ArrowDown") {
+    shipRightBullets.push(new RightBullet(ship.x, ship.y));
+    sounds.shot.play();
+  }
+
+  if (key === "ArrowLeft") if (ship.velxr < ship.speed) ship.velxr--;
+  if (key === "ArrowRight") if (ship.velxl < ship.speed) ship.velxl++;
+
+  if (key === " " && ship.y >= 120) {
+    ship.y -= 120;
+    sounds.jump.play();
   }
 });

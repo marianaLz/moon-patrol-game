@@ -5,126 +5,105 @@
 
 body {
   background: black;
-}
-body #center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   height: 100vh;
-}
-
-body #logo {
-  position: absolute;
-  margin-top: 9vh;
-  margin-left: 62vw;
-}
-
-body #container {
-  align-items: center;
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-}
-
-body #shipp {
-  margin-left: 8vw;
-}
-
-body #main-btns {
-  margin-left: -5vw;
-  margin-top: 10vh;
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  height: 30vh;
   align-items: center;
-}
-
-body #secnd-btns {
-  width: 25vw;
-  position: absolute;
-  margin-top: 10vh;
-}
-
-body #instructions {
-  font-size: 25px;
-  color: black;
-  padding: 10px 15px;
-  border-radius: 5px;
-  margin-bottom: 30px;
-}
-
-body #startButton,
-body #start2Button {
-  font-size: 25px;
-  background-color: lightgoldenrodyellow;
-  color: black;
-  padding: 10px 15px;
-  border-radius: 5px;
-  margin: 20px;
-}
-
-body #startButton:hover,
-body #start2Button:hover {
-  background-color: palegoldenrod;
-  transition: all 0.3s;
-}
-
-body #restartButton,
-body #restart2Button {
-  font-size: 25px;
-  background-color: rgba(144, 238, 144, 0.95);
-  color: black;
-  padding: 10px 15px;
-  border: 0;
-  border-radius: 5px;
-  margin: 10px;
-}
-
-body #restartButton:hover,
-body #restart2Button:hover {
-  cursor: pointer;
-  background-color: palegreen;
-  transition: all 0.3s;
-}
-
-body #main {
-  cursor: pointer;
-  font-size: 25px;
-  background-color: rgba(255, 192, 203, 0.9);
-  color: black;
-  padding: 10px 15px;
-  border: 0;
-  border-radius: 5px;
-  margin: 10px;
-}
-
-body #main:hover {
-  background-color: pink;
-  transition: all 0.3s;
-}
-
-body #soundOn,
-body #soundOff {
-  cursor: pointer;
-  margin-left: 7vw;
-  margin-top: -32vh;
-  position: absolute;
-}
-
-.disp {
-  display: none;
-}
-
-body .uk-modal-dialog {
-  background: lightgrey;
-  color: black;
-  border-radius: 20px;
-  text-align: center;
 }
 
 canvas {
-  border-radius: 75px;
+  width: 85vw;
+  height: 75vh;
+  border-radius: 4vh;
   border: 3px solid mediumorchid;
+}
+
+img.logo {
+  position: absolute;
+  top: -4vh;
+  right: 8vw;
+  width: 20vw;
+}
+
+div.container {
+  position: relative;
+}
+
+div#mainScreen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+div.main-buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+div.end-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 3vh;
+}
+
+button {
+  font-size: 1.8vh;
+  font-weight: 600;
+  color: black;
+  padding: 1.8vh 2vh;
+  border-radius: 1vh;
+  border: none;
+  cursor: pointer;
+  background: #fff;
+  font-family: 'pixelart';
+}
+button:hover {
+  opacity: 0.8;
+}
+
+button#soundOn,
+button#soundOff {
+  cursor: pointer;
+  position: absolute;
+  left: 48vw;
+  top: 3.3vh;
+  padding: 0.75vh;
+}
+
+.uk-modal-close-default svg {
+  width: 1.8vh;
+  height: 1.8vh;
+  color: #fff;
+}
+.uk-modal-dialog {
+  padding: 5vh;
+  color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  font-family: 'pixelart';
+  font-size: 1.3vh;
+  width: 30vw;
+  background: #000;
+  border: 3px solid mediumorchid;
+
+}
+.uk-modal-dialog img {
+  filter: invert(100%);
+}
+.uk-modal-dialog ol {
+  text-align: left;
+}
+.uk-modal-dialog .end-modal-text {
+  font-size: 3vh;
+}
+
+.hidden {
+  display: none !important;
 }
